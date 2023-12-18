@@ -7,13 +7,13 @@
 //
 
 import Foundation
-#if os(iOS) || os(tvOS)
+#if os(iOS) || os(tvOS) || os(visionOS)
 import UIKit
 #elseif os(watchOS)
 import WatchKit
 #endif
 
-/// Enumerates the Local (`UserDefaults`) and Remote (`NSUNSUbiquitousKeyValueStore`) data stores
+/// Enumerates the Local (`UserDefaults`) and Remote (`NSUbiquitousKeyValueStore`) data stores
 private enum ZephyrDataStore {
     case local  // UserDefaults
     case remote // NSUbiquitousKeyValueStore
@@ -269,28 +269,36 @@ private extension Zephyr {
 
     /// Setup UIApplication and UIScene event state notifications.
     private func setupNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keysDidChangeOnCloud(notification:)),
-                                               name: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
-                                               object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keysDidChangeOnCloud(notification:)),
+            name: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
+            object: nil
+        )
 
-        #if os(iOS) || os(tvOS)
-        if #available(iOS 13.0, tvOS 13.0, *) {
-            NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground(notification:)),
-                                                   name: UIScene.willEnterForegroundNotification,
-                                                   object: nil)
-        }
+        #if os(iOS) || os(tvOS) || os(visionOS)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(willEnterForeground(notification:)),
+            name: UIScene.willEnterForegroundNotification,
+            object: nil
+        )
 
-        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground(notification:)),
-                                               name: UIApplication.willEnterForegroundNotification,
-                                               object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(willEnterForeground(notification:)),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
         #endif
         
         #if os(watchOS)
-        if #available(watchOS 9.0, *) {
-            NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground(notification:)),
-                                                   name: WKExtension.applicationWillEnterForegroundNotification,
-                                                   object: nil)
-        }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(willEnterForeground(notification:)),
+            name: WKExtension.applicationWillEnterForegroundNotification,
+            object: nil
+        )
         #endif
     }
 

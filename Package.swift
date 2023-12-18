@@ -1,9 +1,9 @@
-// swift-tools-version:5.3
+// swift-tools-version: 5.9
 import PackageDescription
 
 let package = Package(
     name: "Zephyr",
-    platforms: [.iOS(.v11), .macOS(.v11), .tvOS(.v11), .watchOS("9.0")],
+    platforms: [.iOS(.v15), .macOS(.v13), .tvOS(.v15), .visionOS(.v1), .watchOS(.v9)],
     products: [.library(name: "Zephyr", targets: ["Zephyr"])],
     targets: [.target(name: "Zephyr", path: "Sources")],  
     swiftLanguageVersions: [.v5]
